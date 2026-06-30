@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breakout Matemático: El Círculo Dorado del Señor Quetzal</title>
+    <link rel="icon" type="image/x-icon" href="./resources/favicon.ico">
+    <style>
+        /* ESTILOS INSPIRADOS EN GUATEMALA (Selva, volcanes, misticismo maya) */
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #e0f2f1; /* Verde agua claro */
+            color: #1a332a;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #004d40; /* Verde maya profundo */
+            color: #e0f2f1;
+            width: 100%;
+            text-align: center;
+            padding: 15px 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-bottom: 5px solid #ffb300; /* Dorado */
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.6rem;
+            letter-spacing: 1px;
+            padding: 0 10px;
+        }
+
+        #timer-box {
+            margin-top: 5px;
+            font-size: 1.1rem;
+        }
+
+        #timer {
+            font-size: 1.2rem;
+            font-weight: bold;
+            background: #ffb300;
+            color: #004d40;
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 90%;
+            background: #ffffff;
+            margin: 30px auto;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            border: 2px solid #004d40;
+            display: none; /* Controlado por JS */
+            box-sizing: border-box;
+        }
+
+        .container.active {
+            display: block;
+        }
+
+        h2 {
+            color: #004d40;
+            border-bottom: 2px solid #ffb300;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .sistema-box {
+            background-color: #f5f5f5;
+            border-left: 5px solid #004d40;
+            padding: 15px;
+            margin: 20px auto;
+            font-size: 1.3rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            max-width: 300px;
+            text-align: left;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            background-color: #b2dfdb;
+            border: 2px dashed #004d40;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            padding: 10px 0;
+        }
+
+        .image-placeholder img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        button {
+            background-color: #004d40;
+            color: #e0f2f1;
+            border: 2px solid #ffb300;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #ffb300;
+            color: #004d40;
+        }
+
+        .inputs-respuesta {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        input[type="number"], input[type="text"] {
+            padding: 10px;
+            font-size: 1rem;
+            width: 80px;
+            border: 2px solid #b2dfdb;
+            border-radius: 5px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        #final-code {
+            width: 160px;
+        }
+
+        .btn-nav {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .resumen-box {
+            background-color: #f0fdf4; 
+            border: 2px solid #ffb300; 
+            padding: 15px; 
+            margin: 20px auto; 
+            border-radius: 5px; 
+            text-align: left;
+            max-width: 450px;
+        }
+
+        .resumen-box ul {
+            padding-left: 20px; 
+            margin: 5px 0 0 0;
+        }
+
+        .resumen-box li {
+            margin-bottom: 5px;
+        }
+
+        .profesor-panel {
+            background-color: #e0e0e0;
+            border: 2px solid #424242;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            display: none;
+            text-align: left;
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+            font-size: 0.9rem;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Misión Guatemala: El Círculo Dorado</h1>
+    <div id="timer-box" style="display:none;">⏳ Tiempo restante: <span id="timer">--:--</span></div>
+</header>
+
+<div id="screen-intro" class="container active">
+    <div class="image-placeholder"><img src="./resources/intro_guatemala.png" alt="Volcán de Fuego y Gladis"></div>
+    <h2>¡Alerta en el Volcán de Fuego!</h2>
+    <p>A los pies del imponente Volcán de Fuego se ha cometido un terrible delito: ¡las temibles villanas Incógnitas han robado el sagrado <strong>Círculo Dorado</strong> del Señor Quetzal! Sin él, el equilibrio natural de los bosques guatemaltecos se romperá.</p>
+    <p>Por suerte, la gallina <strong>Gladis</strong>, valiente descendiente directa de la gran saga de los T-Rex, ha decidido unirse al Señor Quetzal en una persecución contrarreloj por todo el país. Para capturar a las villanas, tendrás que rastrearlas, <strong>despejar sus valores y resolver los sistemas de dos ecuaciones</strong> que han dejado bloqueando vuestro paso.</p>
+    
+    <h3>Elige la dificultad del tiempo:</h3>
+    <label><input type="radio" name="game-time" value="30"> Modo Desafío (30 minutos)</label><br>
+    <label><input type="radio" name="game-time" value="60" checked> Modo Explorador (60 minutos)</label><br><br>
+    
+    <div style="text-align: center;">
+        <button onclick="startGame()">Iniciar Persecución 🦖</button>
+    </div>
+</div>
+
+<div id="screen-p1" class="container">
+    <div class="image-placeholder"><img src="./resources/antigua.png" alt="Antigua Guatemala"></div>
+    <h2>Etapa 1: Calles empedradas de Antigua Guatemala</h2>
+    <p>Gladis y el Señor Quetzal llegan batiendo las alas a Antigua. Bajo el Arco de Santa Catalina, unas misteriosas huellas se dividen. Las villanas han camuflado sus rastros usando un sistema lineal básico. ¡Resuélvelo para saber hacia dónde han huido!</p>
+    
+    <div class="sistema-box">
+        &nbsp;&nbsp;x + y = 7<br>
+        5x - 2y = 14
+    </div>
+
+    <div class="inputs-respuesta">
+        <div class="input-group"><label>x = </label><input type="number" id="ans-1-x" placeholder="?"></div>
+        <div class="input-group"><label>y = </label><input type="number" id="ans-1-y" placeholder="?"></div>
+    </div>
+
+    <div class="btn-nav">
+        <button style="visibility: hidden;">Atrás</button>
+        <button onclick="nextScreen('p1', 'p2')">Volar a Tikal ➡️</button>
+    </div>
+</div>
+
+<div id="screen-p2" class="container">
+    <div class="image-placeholder"><img src="./resources/tikal.png" alt="Templo del Jaguar - Tikal"></div>
+    <h2>Etapa 2: El Templo del Gran Jaguar en Tikal</h2>
+    <p>Adentrándose en la densa selva del Petén, subís las escalinatas del templo maya. Una inscripción oculta en la piedra retiene el avance de la gallina Gladis. El método de sustitución o reducción te vendrá de maravilla aquí.</p>
+    
+    <div class="sistema-box">
+        2x + 3y = 16<br>
+        &nbsp;&nbsp;x - &nbsp;y = 3
+    </div>
+
+    <div class="inputs-respuesta">
+        <div class="input-group"><label>x = </label><input type="number" id="ans-2-x" placeholder="?"></div>
+        <div class="input-group"><label>y = </label><input type="number" id="ans-2-y" placeholder="?"></div>
+    </div>
+
+    <div class="btn-nav">
+        <button onclick="nextScreen('p2', 'p1')">⬅️ Atrás</button>
+        <button onclick="nextScreen('p2', 'p3')">Ir al Lago ➡️</button>
+    </div>
+</div>
+
+<div id="screen-p3" class="container">
+    <div class="image-placeholder"><img src="./resources/atitlan.png" alt="Lago Atitlán"></div>
+    <h2>Etapa 3: Las profundidades del Lago Atitlán</h2>
+    <p>¡El Señor Quetzal divisa a las villanas cruzando el majestuoso lago rodeado de volcanes! Para conseguir una lancha rápida y alcanzarlas, debes resolver este sistema que el lanchero local os propone como acertijo.</p>
+    
+    <div class="sistema-box">
+        3x + 2y = 38<br>
+        2x - 5y = 0
+    </div>
+
+    <div class="inputs-respuesta">
+        <div class="input-group"><label>x = </label><input type="number" id="ans-3-x" placeholder="?"></div>
+        <div class="input-group"><label>y = </label><input type="number" id="ans-3-y" placeholder="?"></div>
+    </div>
+
+    <div class="btn-nav">
+        <button onclick="nextScreen('p3', 'p2')">⬅️ Atrás</button>
+        <button onclick="nextScreen('p3', 'p4')">Ir a Semuc ➡️</button>
+    </div>
+</div>
+
+<div id="screen-p4" class="container">
+    <div class="image-placeholder"><img src="./resources/semuc.png" alt="Semuc Champey"></div>
+    <h2>Etapa 4: Las pozas turquesas de Semuc Champey</h2>
+    <p>¡Casi las tenéis! Entre las espectaculares pozas escalonadas de agua cristalina y cuevas, las Incógnitas se han blindado tras el sistema más complejo de la ruta. ¡Demuestra tu nivel de 3º de la ESO y desvélaslas!</p>
+    
+    <div class="sistema-box">
+        2x + &nbsp;y = 20<br>
+        3x - 2y = 2
+    </div>
+
+    <div class="inputs-respuesta">
+        <div class="input-group"><label>x = </label><input type="number" id="ans-4-x" placeholder="?"></div>
+        <div class="input-group"><label>y = </label><input type="number" id="ans-4-y" placeholder="?"></div>
+    </div>
+
+    <div class="btn-nav">
+        <button onclick="nextScreen('p4', 'p3')">⬅️ Atrás</button>
+        <button onclick="nextScreen('p4', 'lock')">Ir al Candado Final ➡️</button>
+    </div>
+</div>
+
+<div id="screen-lock" class="container">
+    <div class="image-placeholder"><img src="./resources/candado_quetzal.png" alt="Altar de Quetzaltenango"></div>
+    <h2>El Altar Secreto en Quetzaltenango</h2>
+    <p>Habéis acorralado a las villanas en Quetzaltenango. Tienen el Círculo Dorado metido en un cofre sagrado. Para abrir el candado final, debes introducir el <strong>código de activación</strong>.</p>
+    <p><strong>Clave del Candado:</strong> La <u>SUMA TOTAL</u> de todos los valores encontrados (es decir: $x_1 + y_1 + x_2 + y_2 + x_3 + y_3 + x_4 + y_4$).</p>
+    
+    <div class="resumen-box">
+        <h3 style="margin-top: 0; color: #004d40;">Tus respuestas recolectadas:</h3>
+        <ul>
+            <li><strong>Antigua:</strong> x = <span id="res-1-x"></span>, y = <span id="res-1-y"></span></li>
+            <li><strong>Tikal:</strong> x = <span id="res-2-x"></span>, y = <span id="res-2-y"></span></li>
+            <li><strong>Atitlán:</strong> x = <span id="res-3-x"></span>, y = <span id="res-3-y"></span></li>
+            <li><strong>Semuc:</strong> x = <span id="res-4-x"></span>, y = <span id="res-4-y"></span></li>
+        </ul>
+    </div>
+
+    <div style="text-align: center;">
+        <input type="number" id="final-code" placeholder="Código de la Suma"><br><br>
+        <button onclick="checkLock()">🔓 Abrir cofre y recuperar el Círculo</button>
+    </div>
+    <div class="btn-nav">
+        <button onclick="nextScreen('lock', 'p4')">⬅️ Revisar Ecuaciones</button>
+    </div>
+</div>
+
+<div id="screen-success" class="container">
+    <div class="image-placeholder"><img src="./resources/exito_quetzal.png" alt="Victoria"></div>
+    <h2 style="color: #2e7d32;">¡VICTORIA TOTAL! 🎉🇬🇹</h2>
+    <p>¡El cofre se abre con un destello dorado! Gladis da un cacareo triunfal que resuena como el rugido de un mismísimo T-Rex y el Señor Quetzal alza el vuelo con el Círculo Dorado a buen recaudo.</p>
+    <p>Las Incógnitas han sido despejadas y derrotadas gracias a tus perfectas habilidades algebraicas. ¡Has salvado el equilibrio de Guatemala!</p>
+</div>
+
+<div id="screen-fail" class="container">
+    <div class="image-placeholder"><img src="./resources/fracaso_quetzal.png" alt="Fracaso"></div>
+    <h2 style="color: #c62828;">¡MISIÓN FRACASADA! ⏱️❌</h2>
+    <p id="fail-message">El código no encaja o el tiempo se ha esfumado en la selva. Las incógnitas han escapado cruzando la frontera con el artefacto mágico.</p>
+    <p>¡No dejes que se salgan con la suya! Revisa tus despejes, repasa los signos al operar y vuelve a intentarlo con Gladis.</p>
+    <div style="text-align: center; margin-top: 20px;">
+        <button onclick="restartGame()">🔄 Volver a empezar (Reiniciar Aventura)</button>
+    </div>
+</div>
+
+<footer>
+    <hr>
+    <button onclick="toggleProfesor()">🔑 Modo Profesor</button>
+    <div id="profesor-panel" class="profesor-panel">
+        <h3>Panel del Profesor</h3>
+        <p>Introduce la contraseña maestra (PROFE) para ver las soluciones:</p>
+        <input type="text" id="prof-pass" placeholder="Contraseña...">
+        <button onclick="unlockProfesor()">Ver Respuestas</button>
+        
+        <div id="prof-content" style="display:none; text-align: left; margin-top:15px;">
+            <h4>Soluciones de los Sistemas:</h4>
+            <ul>
+                <li><strong>P1 (Antigua):</strong> x = 4, y = 3</li>
+                <li><strong>P2 (Tikal):</strong> x = 5, y = 2</li>
+                <li><strong>P3 (Atitlán):</strong> x = 10, y = 4</li>
+                <li><strong>P4 (Semuc Champey):</strong> x = 6, y = 8</li>
+            </ul>
+            <p><strong>🔑 Código del candado final (Suma):</strong> 4 + 3 + 5 + 2 + 10 + 4 + 6 + 8 = <strong style="color:red; font-size:1.2rem;">42</strong></p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Variables globales
+    let countdown;
+    let timeLeft; 
+    const correctCode = 42; // Suma de todos los valores: 4+3+5+2+10+4+6+8
+
+    // Función para cambiar de pantalla
+    function nextScreen(currentId, nextId) {
+        document.getElementById('screen-' + currentId).classList.remove('active');
+        document.getElementById('screen-' + nextId).classList.add('active');
+        
+        if (nextId === 'lock') {
+            renderResumenRespuestas();
+        }
+        window.scrollTo(0,0);
+    }
+
+    // Procesa los campos numéricos insertados por pantalla
+    function renderResumenRespuestas() {
+        for (let i = 1; i <= 4; i++) {
+            const valX = document.getElementById('ans-' + i + '-x').value.trim();
+            const valY = document.getElementById('ans-' + i + '-y').value.trim();
+            
+            const slotX = document.getElementById('res-' + i + '-x');
+            const slotY = document.getElementById('res-' + i + '-y');
+            
+            slotX.innerHTML = valX === "" ? '<span style="color:#c62828;">?</span>' : '<strong>' + valX + '</strong>';
+            slotY.innerHTML = valY === "" ? '<span style="color:#c62828;">?</span>' : '<strong>' + valY + '</strong>';
+        }
+    }
+
+    // Iniciar Juego y Temporizador
+    function startGame() {
+        const selectedTime = document.querySelector('input[name="game-time"]:checked').value;
+        timeLeft = selectedTime * 60; // Pasar a segundos
+        
+        document.getElementById('timer-box').style.display = 'block';
+        startTimer();
+        
+        nextScreen('intro', 'p1');
+    }
+
+    // Correr el cronómetro
+    function startTimer() {
+        clearInterval(countdown);
+        countdown = setInterval(() => {
+            if(timeLeft <= 0) {
+                clearInterval(countdown);
+                triggerFail("¡Se ha agotado el tiempo de búsqueda!");
+            } else {
+                timeLeft--;
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                document.getElementById('timer').innerText = 
+                    (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+            }
+        }, 1000);
+    }
+
+    // Comprobar el código del candado
+    function checkLock() {
+        const inputCode = parseInt(document.getElementById('final-code').value);
+        
+        if (inputCode === correctCode) {
+            clearInterval(countdown); 
+            hideAllContainers();
+            document.getElementById('screen-success').classList.add('active');
+            document.getElementById('timer-box').style.display = 'none';
+        } else {
+            triggerFail("El candado del altar no cede. Los valores sumados no son los correctos.");
+        }
+    }
+
+    // Lanzar pantalla de fracaso
+    function triggerFail(message) {
+        clearInterval(countdown);
+        hideAllContainers();
+        document.getElementById('fail-message').innerText = message;
+        document.getElementById('screen-fail').classList.add('active');
+        document.getElementById('timer-box').style.display = 'none';
+    }
+
+    // Reiniciar el juego por completo
+    function restartGame() {
+        for(let i=1; i<=4; i++) {
+            document.getElementById('ans-' + i + '-x').value = '';
+            document.getElementById('ans-' + i + '-y').value = '';
+        }
+        document.getElementById('final-code').value = '';
+        document.getElementById('prof-pass').value = '';
+        document.getElementById('prof-content').style.display = 'none';
+        document.getElementById('profesor-panel').style.display = 'none';
+        
+        hideAllContainers();
+        document.getElementById('screen-intro').classList.add('active');
+    }
+
+    // Ocultar todos los contenedores principales
+    function hideAllContainers() {
+        const containers = document.querySelectorAll('.container');
+        containers.forEach(c => c.classList.remove('active'));
+    }
+
+    // Desplegar/Ocultar Sección Profesor
+    function toggleProfesor() {
+        const panel = document.getElementById('profesor-panel');
+        panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
+    }
+
+    // Validar contraseña profesor
+    function unlockProfesor() {
+        const pass = document.getElementById('prof-pass').value.toUpperCase();
+        if ((pass === "PROFE") || (pass === "GUATEMALA")) {
+            document.getElementById('prof-content').style.display = 'block';
+        } else {
+            alert("Contraseña incorrecta. ¡Las incógnitas se burlan de ti!");
+        }
+    }
+</script>
+
+</body>
+</html>
