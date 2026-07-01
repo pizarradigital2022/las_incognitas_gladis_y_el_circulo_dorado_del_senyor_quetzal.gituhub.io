@@ -303,7 +303,7 @@
     <div class="image-placeholder"><img src="./resources/candado_quetzal.png" alt="Altar de Quetzaltenango"></div>
     <h2>El Altar Secreto en Quetzaltenango</h2>
     <p>Habéis acorralado a las villanas en Quetzaltenango. Tienen el Círculo Dorado metido en un cofre sagrado. Para abrir el candado final, debes introducir el <strong>código de activación</strong>.</p>
-    <p><strong>Clave del Candado:</strong> La <u>SUMA TOTAL</u> de todos los valores encontrados (es decir: $x_1 + y_1 + x_2 + y_2 + x_3 + y_3 + x_4 + y_4$).</p>
+    <p><strong>Clave del Candado:</strong> La <u>SUMA TOTAL</u> de todos los valores encontrados (es decir: x<sub>1</sub> + y<sub>1</sub> + x<sub>2</sub> + y<sub>2</sub> + x<sub>3</sub> + y<sub>3</sub> + x<sub>4</sub> + y<sub>4</sub>).</p>
     
     <div class="resumen-box">
         <h3 style="margin-top: 0; color: #004d40;">Tus respuestas recolectadas:</h3>
@@ -342,11 +342,14 @@
 </div>
 
 <footer>
+     <hr>
+    <p>Autor: Joaquín Candañedo.<br><a href="https://creativecommons.org/licenses/by-sa/4.0/"><img src="./resources/CC_BY_SA.png" alt="Creative Commons Reconocimiento - Compartir Igual"></a></p>  
+
     <hr>
     <button onclick="toggleProfesor()">🔑 Modo Profesor</button>
     <div id="profesor-panel" class="profesor-panel">
         <h3>Panel del Profesor</h3>
-        <p>Introduce la contraseña maestra (PROFE) para ver las soluciones:</p>
+        <p>Introduce la contraseña maestra para ver las soluciones:</p>
         <input type="text" id="prof-pass" placeholder="Contraseña...">
         <button onclick="unlockProfesor()">Ver Respuestas</button>
         
